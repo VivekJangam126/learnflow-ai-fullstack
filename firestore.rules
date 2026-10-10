@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // User profiles
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Plans
+    match /plans/{planId} {
+      allow read, write: if request.auth != null && 
+        (resource == null || resource.data.userId == request.auth.uid);
+    }
+    
+    // Weeks
+    match /weeks/{weekId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Tasks
+    match /tasks/{taskId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Notes
+    match /notes/{noteId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
